@@ -177,3 +177,9 @@ out.gain.setValueAtTime(1.0, now);
   //volume.update();
   spectrogram.update();
 } ());
+
+$(function() {
+  $('#playlist-items').on('click', 'li', function() {
+    audio.src = $(this).text();
+  });
+});
