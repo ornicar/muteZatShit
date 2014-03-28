@@ -10,12 +10,14 @@ var ee = BackboneEvents.mixin({
     var analyser = self.analyser;
     var concatNb = 0;
     var positive = 0;
+    var negative = 0;
 
     var timeArray = [];
     var freqArray = [];
 
     var ACQUISITION = 50;
     var NUMBER_POSITIVE_FLAG = 2;
+    var NUMBER_NEGATIVE_FLAG = 2;
 
     setInterval(function() {
       var freqDomain = new Uint8Array(analyser.frequencyBinCount);
@@ -45,18 +47,25 @@ var ee = BackboneEvents.mixin({
         var volume = getPower(timeArray);
         var energyBalance = getEnergyBalance(averageFreq);
         var numberExtremeFreq = getNumberExtremeFrequency(averageFreq);
+        var voicePower = getVoicePower(averageFreq);
+
         var info = {"volume": volume, "energyBalance": energyBalance, 
-                "numberExtremeFreq": numberExtremeFreq};
-        // console.log(info);
+                "numberExtremeFreq": numberExtremeFreq, "voicePower": voicePower};
+        console.log(info);
         var isAd = decisionTree(info);
         if (isAd) {
-          if (positive > NUMBER_POSITIVE_FLAG) {
-            self.trigger("isAd", true);
-          } else {
-            positive++;
-          }
+          positive++;
+          if (positive >= NUMBER_POSITIVE_FLAG) {
+            negative = NUMBER_NEGATIVE_FLAG;
+            self.trigger("isAd", "");
+          } 
         } else {
-          positive = 0;
+          negative--;
+          if (negative >= 1) {
+            self.trigger("isAd", "");
+          } else {
+            positive = 0;
+          }
         }
         concatNb = 0;
         timeArray = [];
@@ -68,11 +77,14 @@ var ee = BackboneEvents.mixin({
 
 //isAd
 function decisionTree(info) {
-  if (info.volume > 20) {
+  if (info.volume > 26) {
     return false;
   } else {
-    if (info.energyBalance > 0.42) return true
-    else return false;
+    if (info.voicePower < 75) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
 
@@ -97,7 +109,7 @@ function getVoicePower(array) {
   var p = 0;
   for(var i = startIndex; i < cutIndex; i++) {
     var d = array[i];
-    p += d * d;
+    p += d;
   }
   return p;
 }

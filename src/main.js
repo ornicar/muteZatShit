@@ -23,4 +23,5 @@ analyser.on("isAd", function(isAd) {
 
 // audio.src = "http://listen.radionomy.com/fuzzy-and-groovy";
 audio.src = "http://sacem.iliaz.com/radionova.ogg";
+// audio.src = "http://sacem.iliaz.com/spotify.ogg";
 audio.play();
