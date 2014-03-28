@@ -41,6 +41,11 @@ module.exports = function(grunt) {
         files: {
           'bundle.js': ['src/*.js'],
         },
+      },
+      options : {
+        "bundleOptions" : {
+          "debug": true
+        }
       }
     },
 
