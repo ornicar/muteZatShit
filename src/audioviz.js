@@ -5,9 +5,9 @@ var _ = require("underscore");
 Waveform = Backbone.Model.extend({
   defaults: {
     samples: 256,
-    width: 300,
+    width: 400,
     height: 200,
-    strokeSize: 4,
+    strokeSize: 2,
     bg: "transparent",
     color: "white"
   },
@@ -50,14 +50,9 @@ WaveformView = Backbone.View.extend({
     this.$container = $('<div style="position:relative" />');
     this.$container.append(this.canvas);
     if (!opts.noControls) {
-      this.$wfcontrols = $('<div style="position:absolute;right:5px;top:0px" />').appendTo(this.$container);
+      this.$wfcontrols = $('<div class="first-control controls-wave"/>').appendTo(this.$container);
       this.$minus = $('<button class="wf-minus">-</button>').appendTo(this.$wfcontrols);
       this.$wf = $('<span class="wf"></span>').appendTo(this.$wfcontrols);
-      this.$wf.css({
-        color: "#fff",
-        fontSize: "20px",
-        padding: "0 10px"
-      });
       this.$plus = $('<button class="wf-plus">+</button>').appendTo(this.$wfcontrols);
       var syncWf = _.bind(function () {
         this.$wf.text((Math.round(10000 * this.model.get("samples") / this.model.get("sampleRate"))/10)+" ms");
@@ -117,12 +112,8 @@ WaveformView = Backbone.View.extend({
       ctx.lineTo(W*(i+1)/lengthWaveform, fy(arrayWaveform[i]));
     }
 
-    ctx.strokeStyle = "#000";
+    ctx.strokeStyle = "#59baeb";
     ctx.lineWidth = this.model.get("strokeSize");
-    ctx.stroke();
-
-    ctx.strokeStyle = this.model.get("color");
-    ctx.lineWidth = this.model.get("strokeSize")-1;
     ctx.stroke();
   }
 });
@@ -134,7 +125,7 @@ Spectrum = Backbone.Model.extend({
     height: 200,
     refreshRate: 40,
     bg: "transparent",
-    gradientColors: ['rgba(255,50,0,0.8)', 'rgba(0,255,0,0.8)']
+    gradientColors: ['rgba(89,186,235,0.85)', 'rgba(89,186,235,0.4)']
   },
   initialize: function () {
     this.on("change:samples", this.syncSamples);
@@ -185,14 +176,9 @@ SpectrumView = Backbone.View.extend({
     this.$container = $('<div style="position:relative" />');
     this.$container.append(this.canvas);
     if (!opts.noControls) {
-      this.$spcontrols = $('<div style="position:absolute;right:5px;top:0px" />').appendTo(this.$container);
+      this.$spcontrols = $('<div class="controls-wave"/>').appendTo(this.$container);
       this.$minus = $('<button class="sp-minus">-</button>').appendTo(this.$spcontrols);
       this.$sp = $('<span class="sp"></span>').appendTo(this.$spcontrols);
-      this.$sp.css({
-        color: "#fff",
-        fontSize: "20px",
-        padding: "0 10px"
-      });
       this.$plus = $('<button class="sp-plus">+</button>').appendTo(this.$spcontrols);
       var syncsp = _.bind(function () {
         this.$sp.text(this.model.get("samples"));
@@ -393,9 +379,13 @@ VolumeView = Backbone.View.extend({
   initialize: function (opts) {
     this.gran = 256;
     this.canvas = document.createElement("canvas");
+    this.$el = $('<div class="volume" style="position:relative" />');
     this.$el.append(this.canvas);
     this.ctx = this.canvas.getContext("2d");
     //this.generateGradientCanvas();
+
+    this.$wfcontrols = $('<div class="controls-wave"/>').appendTo(this.$el);
+
     this.syncSize();
     //this.listenTo(this.model, "change:gradientColors", this.generateGradientCanvas);
     this.listenTo(this.model, "change:width change:height", this.syncSize);
@@ -456,8 +446,9 @@ VolumeView = Backbone.View.extend({
       //ctx.fillRect(W-1,H-y,1,freqh);
     }
     //var p = (vol / max) * H;
-    var p = H * vol / (max*max*lengthVol);
-    ctx.fillStyle = "#000"; //this.getGradientValue(p);
+
+    var p = H * vol / (max*max*lengthVol/2);
+    ctx.fillStyle = "rgba(89,186,235,0.85)"; //this.getGradientValue(p);
     ctx.fillRect(W-1, 0, 1, H);
     ctx.fillStyle = "#fff"; //this.getGradientValue(p);
     ctx.fillRect(W-1, 0, 1, p);

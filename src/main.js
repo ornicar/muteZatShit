@@ -15,8 +15,8 @@ out2.gain.setValueAtTime(0, ctx.currentTime);
 
 var container = $("#container");
 
-var vizWhith = 500;
-var vizHeigth = 150;
+var vizWhith = 600;
+var vizHeigth = 158;
 var waveform = new Waveform({
   width: vizWhith,
   height: vizHeigth
@@ -29,7 +29,7 @@ var waveformView = new WaveformView({
 waveformView.$el.appendTo(container);
 
 waveform.setNode(out, ctx);
-/*
+
 var spectrum = new Spectrum({
   width: vizWhith,
   height: vizHeigth
@@ -39,7 +39,7 @@ var spectrumView = new SpectrumView({
 });
 spectrumView.$el.appendTo(container);
 spectrum.setNode(out, ctx);
-*/
+
 // VOLUME
 var volume = new Volume({
   width: vizWhith,
@@ -52,7 +52,7 @@ var volumeView = new VolumeView({
 volumeView.$el.appendTo(container);
 volume.setNode(out, ctx);
 
-
+/*
 // SPECTOGRAM
 var spectrogram = new Spectrogram({
   width: vizWhith,
@@ -63,7 +63,7 @@ var spectrogramView = new SpectrogramView({
 });
 spectrogramView.$el.appendTo(container);
 spectrogram.setNode(out, ctx);
-
+*/
 var source = ctx.createMediaElementSource(audio);
 var source2 = ctx.createMediaElementSource(audio2);
 
@@ -82,15 +82,14 @@ analyser.start();
 var nyquist = ctx.sampleRate / 2;
 console.log("freq max", nyquist / 1000 + " kHz");
 
-var timeout;
-analyser.on("isAd", function(isAd) {
+analyser.on("endAd", function() {
+  $("#isAd").fadeOut();
+});
+
+analyser.on("beginAd", function() {
   console.log("AD !!!");
   $("#isAd").show();
-  clearTimeout(timeout);
-  timeout = setTimeout(function() {
-    $("#isAd").fadeOut();
-  }, 2000);
-});
+})
 
 function readUrls() {
   return JSON.parse(localStorage.getItem('urls')) || [];
@@ -240,9 +239,9 @@ function showTitle() {
   //if (end.isFulfilled()) return;
   requestAnimationFrame(loop);
   waveform.update();
-  //spectrum.update();
+  spectrum.update();
   volume.update();
-  spectrogram.update();
+  // spectrogram.update();
 } ());
 
 $(function() {
