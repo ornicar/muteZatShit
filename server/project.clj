@@ -23,5 +23,6 @@
                        :auto-reload?  false}}
    :dev {:dependencies [[ring-mock "0.1.5"]
                         [ring/ring-devel "1.2.1"]]
+         :plugins [[com.jakemccrary/lein-test-refresh "0.3.10"]]
          :env {:dev true}}}
   :min-lein-version "2.0.0")
