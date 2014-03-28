@@ -1,14 +1,65 @@
+var $ = require("jquery");
+
 var analyser = require("./analyser")
 
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
 var audio = new Audio();
 var out = ctx.createGain();
+
+var container = $("#container");
+var waveform = new Waveform({
+  width: 960,
+  height: 200
+});
+
+var waveformView = new WaveformView({
+  model: waveform
+});
+
+waveformView.$el.appendTo(container);
+
+waveform.setNode(out, ctx);
+
+var spectrum = new Spectrum({
+  width: 960,
+  height: 200
+});
+var spectrumView = new SpectrumView({
+  model: spectrum
+});
+spectrumView.$el.appendTo(container);
+spectrum.setNode(out, ctx);
+/*
+// VOLUME
+var volume = new Volume({
+  width: 960,
+  height: 200
+});
+var volumeView = new VolumeView({
+  model: volume
+});
+volumeView.$el.appendTo(container);
+volume.setNode(out, ctx);
+
+*/
+// SPECTOGRAM
+var spectrogram = new Spectrogram({
+  width: 960,
+  height: 200
+});
+var spectrogramView = new SpectrogramView({
+  model: spectrogram
+});
+spectrogramView.$el.appendTo(container);
+spectrogram.setNode(out, ctx);
+
 var source = ctx.createMediaElementSource(audio);
 
 var analyserNode = ctx.createAnalyser();
 
 source.connect(analyserNode);
 analyserNode.connect(out);
+
 out.connect(ctx.destination);
 
 analyser.setAnalyserNode(analyserNode);
@@ -25,7 +76,6 @@ audio.autoplay = true;
 audio.id = "audio-player";
 
 // audio.src = "http://listen.radionomy.com/fuzzy-and-groovy";
-audio.src = "http://sacem.iliaz.com/radionova.ogg";
 audio.src = "http://sacem.iliaz.com/radionova.ogg";
 
 document.getElementById('player').appendChild(audio);
@@ -106,3 +156,21 @@ function readUrls() {
 function displayItem() {
   document.getElementById('playlist-items').innerHTML = readUrls();
 } displayItem();
+
+console.log("fading");
+var now = ctx.currentTime;
+out.gain.cancelScheduledValues( now );
+out.gain.setValueAtTime(1.0, now);
+//out.gain.exponentialRampToValueAtTime(1, ctx.currentTime);
+//out.gain.linearRampToValueAtTime(0.0, now + 18.0);
+//out.gain.exponentialRampToValueAtTime(1.0, now + 4);
+  //out.gain.linearRampToValueAtTime(0, ctx.currentTime + ctx.FADE_TIME);
+
+(function loop () {
+  //if (end.isFulfilled()) return;
+  requestAnimationFrame(loop);
+  waveform.update();
+  spectrum.update();
+  //volume.update();
+  spectrogram.update();
+} ());
