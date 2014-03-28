@@ -2,23 +2,40 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    // jshint: {
-    //   all: {
-    //     src: ['src/*.js']
-    //   }
-    // },
+
     watch: {
-      all: {
-        files: ['src/*.js'],
-        tasks: ['browserify']
-      },
-      options : {
+      options: {
         livereload: true
+      },
+      less: {
+        files: [
+          'src/styles/*.less'
+        ],
+        tasks: ['less:assets']
+      },
+      all: {
+        files: [
+          'src/*.js',
+          'src/main.css'
+        ],
+        tasks: ['browserify']
       },
       html : {
         files: ["index.html"]
       }
     },
+
+    less: {
+      options: {
+        compress: true
+      },
+      assets: {
+        files: {
+          'src/main.css': 'src/styles/main.less'
+        }
+      }
+    },
+
     browserify: {
       all: {
         files: {
@@ -26,6 +43,7 @@ module.exports = function(grunt) {
         },
       }
     },
+
     connect: {
       server: {
         options: {
@@ -36,9 +54,10 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-connect');
 
-  grunt.registerTask('default', ["browserify", "connect", "watch"]);
+  grunt.registerTask('default', ["less", "browserify", "connect", "watch"]);
 
 };
