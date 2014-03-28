@@ -1,15 +1,18 @@
 var $ = require("jquery");
 
-var analyser = require("./analyser")
+var analyser = require("./analyser");
 
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
 var audio = new Audio();
 var out = ctx.createGain();
 
 var container = $("#container");
+
+var vizWhith = 500;
+var vizHeigth = 150;
 var waveform = new Waveform({
-  width: 960,
-  height: 200
+  width: vizWhith,
+  height: vizHeigth
 });
 
 var waveformView = new WaveformView({
@@ -21,8 +24,8 @@ waveformView.$el.appendTo(container);
 waveform.setNode(out, ctx);
 /*
 var spectrum = new Spectrum({
-  width: 960,
-  height: 200
+  width: vizWhith,
+  height: vizHeigth
 });
 var spectrumView = new SpectrumView({
   model: spectrum
@@ -32,8 +35,9 @@ spectrum.setNode(out, ctx);
 */
 // VOLUME
 var volume = new Volume({
-  width: 960,
-  height: 200
+  width: vizWhith,
+  height: vizHeigth,
+  bg: "transparent"
 });
 var volumeView = new VolumeView({
   model: volume
@@ -44,11 +48,11 @@ volume.setNode(out, ctx);
 
 // SPECTOGRAM
 var spectrogram = new Spectrogram({
-  width: 960,
-  height: 200
+  width: vizWhith,
+  height: vizHeigth
 });
 var spectrogramView = new SpectrogramView({
-  model: spectrogram
+  model: spectrogram,
 });
 spectrogramView.$el.appendTo(container);
 spectrogram.setNode(out, ctx);
@@ -68,12 +72,35 @@ analyser.start();
 var nyquist = ctx.sampleRate / 2;
 console.log("freq max", nyquist / 1000 + " kHz");
 
+var timeout;
+analyser.on("isAd", function(isAd) {
+  console.log("AD !!!");
+  $("#isAd").show();
+  clearTimeout(timeout);
+  timeout = setTimeout(function() {
+    $("#isAd").fadeOut();
+  }, 2000);
+});
+
+function readUrls() {
+  return JSON.parse(localStorage.getItem('urls')) || [];
+}
+
+if (readUrls().length === 0) {
+  localStorage['urls'] = JSON.stringify([
+    "http://listen.radionomy.com/fuzzy-and-groovy",
+    "http://sacem.iliaz.com/radionova.ogg",
+    "http://listen.radionomy.com/radio-mozart",
+    "http://stream3.jungletrain.net:8000/"
+  ]);
+}
+
 audio.autoplay = true;
 audio.id = "audio-player";
 
 // audio.src = "http://listen.radionomy.com/fuzzy-and-groovy";
 // audio.src = "http://sacem.iliaz.com/radionova.ogg";
-audio.src = "http://sacem.iliaz.com/spotify.ogg";
+audio.src = readUrls()[0];
 
 document.getElementById('player').appendChild(audio);
 
@@ -124,7 +151,7 @@ function safe_tags_replace(str) {
 
 document.getElementById('form-playlist').addEventListener('submit', function (evt) {
   var urlValue = document.getElementById('input-url').value;
-  var urls = JSON.parse(localStorage.getItem('urls')) || [];
+  var urls = readUrls();
   var safeUrl = safe_tags_replace(urlValue);
 
   // Push to array
@@ -144,8 +171,8 @@ document.getElementById('form-playlist').addEventListener('submit', function (ev
 });
 
 // Read urls of localstorage
-function readUrls() {
-  var urls = JSON.parse(localStorage.getItem('urls')) || [];
+function renderUrls() {
+  var urls = readUrls();
 
   return urls.map(function(url) {
     return '<li>' + url + '</li>';
@@ -154,7 +181,7 @@ function readUrls() {
 
 // Display items
 function displayItem() {
-  document.getElementById('playlist-items').innerHTML = readUrls();
+  document.getElementById('playlist-items').innerHTML = renderUrls();
 } displayItem();
 
 
@@ -176,6 +203,25 @@ analyser.on("endAd", function() {
 // out.gain.exponentialRampToValueAtTime(1.0, now + 4);
 //   out.gain.linearRampToValueAtTime(0, ctx.currentTime + ctx.FADE_TIME);
 
+var showTitleTimeout;
+
+function showTitle() {
+  console.debug(audio.src);
+  $.ajax({
+    url: "http://mzs.iliaz.com",
+    data: {
+      url: audio.src
+    },
+    success: function(obj) {
+      $('#title').text(obj.title);
+      if (showTitleTimeout) clearTimeout(showTitleTimeout);
+      showTitleTimeout = setTimeout(function() {
+        showTitle();
+      }, obj.remaining * 1000);
+    }
+  });
+}
+
 (function loop () {
   //if (end.isFulfilled()) return;
   requestAnimationFrame(loop);
@@ -184,3 +230,12 @@ analyser.on("endAd", function() {
   volume.update();
   spectrogram.update();
 } ());
+
+$(function() {
+  $('#playlist-items').on('click', 'li', function() {
+    var url = $(this).text();
+    audio.src = url;
+    showTitle(url);
+  });
+  showTitle();
+});
