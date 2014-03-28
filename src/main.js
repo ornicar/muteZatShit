@@ -98,7 +98,7 @@ $('#btn-play').on('click', function() {
 });
 
 document.getElementById('volume').addEventListener('change', function () {
-  // gainNode.gain.value = this.value;
+  audio.volume = this.value;
 });
 
 player.addEventListener('timeupdate', function() {
