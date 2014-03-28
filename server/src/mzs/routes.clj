@@ -1,5 +1,5 @@
 (ns mzs.routes
-  (:use compojure.core)
+  (:use compojure.core mzs.filter)
   (:require [clj-http.client :as http]))
 
 (defn home []
