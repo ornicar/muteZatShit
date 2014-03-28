@@ -18,5 +18,6 @@ analyser.on("probability", function(freqs) {
   console.log(freqs[0]);
 });
 
-audio.src = "http://listen.radionomy.com/eda-music-radio";
+
+audio.src = "http://listen.radionomy.com/fuzzy-and-groovy";
 audio.play();
