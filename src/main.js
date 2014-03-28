@@ -170,6 +170,25 @@ out.gain.setValueAtTime(1.0, now);
 //out.gain.exponentialRampToValueAtTime(1.0, now + 4);
   //out.gain.linearRampToValueAtTime(0, ctx.currentTime + ctx.FADE_TIME);
 
+var showTitleTimeout;
+
+function showTitle() {
+  console.debug(audio.src);
+  $.ajax({
+    url: "http://mzs.iliaz.com",
+    data: {
+      url: audio.src
+    },
+    success: function(obj) {
+      $('#title').text(obj.title);
+      if (showTitleTimeout) clearTimeout(showTitleTimeout);
+      showTitleTimeout = setTimeout(function() {
+        showTitle();
+      }, obj.remaining * 1000);
+    }
+  });
+}
+
 (function loop () {
   //if (end.isFulfilled()) return;
   requestAnimationFrame(loop);
@@ -181,6 +200,9 @@ out.gain.setValueAtTime(1.0, now);
 
 $(function() {
   $('#playlist-items').on('click', 'li', function() {
-    audio.src = $(this).text();
+    var url = $(this).text();
+    audio.src = url;
+    showTitle(url);
   });
+  showTitle();
 });
