@@ -72,15 +72,14 @@ analyser.start();
 var nyquist = ctx.sampleRate / 2;
 console.log("freq max", nyquist / 1000 + " kHz");
 
-var timeout;
-analyser.on("isAd", function(isAd) {
+analyser.on("endAd", function() {
+  $("#isAd").fadeOut();
+});
+
+analyser.on("beginAd", function() {
   console.log("AD !!!");
   $("#isAd").show();
-  clearTimeout(timeout);
-  timeout = setTimeout(function() {
-    $("#isAd").fadeOut();
-  }, 2000);
-});
+})
 
 function readUrls() {
   return JSON.parse(localStorage.getItem('urls')) || [];
