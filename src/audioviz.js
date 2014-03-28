@@ -133,7 +133,7 @@ Spectrum = Backbone.Model.extend({
     width: 300,
     height: 200,
     refreshRate: 40,
-    bg: "black",
+    bg: "transparent",
     gradientColors: ['rgba(255,50,0,0.8)', 'rgba(0,255,0,0.8)']
   },
   initialize: function () {
@@ -440,6 +440,9 @@ VolumeView = Backbone.View.extend({
 
     var W = ctx.canvas.width;
     var H = ctx.canvas.height;
+    //ctx.clearRect(0,0,W,H);
+    //ctx.fillStyle = this.model.get("bg");
+    //ctx.fillRect(0,0,W,H);
 
     ctx.drawImage(ctx.canvas, -1, 0);
     //var freqh = H / lengthVol; // We can afford to lose some high freq viz...
