@@ -18,8 +18,9 @@ var nyquist = ctx.sampleRate / 2;
 console.log("freq max", nyquist / 1000 + " kHz");
 
 analyser.on("isAd", function(isAd) {
-  console.log(isAd);
+  console.log("AD !!!");
 });
 
-audio.src = "http://listen.radionomy.com/fuzzy-and-groovy";
+// audio.src = "http://listen.radionomy.com/fuzzy-and-groovy";
+audio.src = "http://sacem.iliaz.com/radionova.ogg";
 audio.play();

@@ -9,20 +9,24 @@ var ee = BackboneEvents.mixin({
     var self = this;
     var analyser = self.analyser;
     var concatNb = 0;
+    var positive = 0;
 
     var timeArray = [];
     var freqArray = [];
+
+    var ACQUISITION = 50;
+    var NUMBER_POSITIVE_FLAG = 2;
 
     setInterval(function() {
       var freqDomain = new Uint8Array(analyser.frequencyBinCount);
       var timeDomain = new Uint8Array(analyser.frequencyBinCount);
 
-      var ACQUISITION = 100
-
       analyser.getByteFrequencyData(freqDomain);
       analyser.getByteTimeDomainData(timeDomain);
-      var normalizedFreqDomain = _.map(freqDomain, function(v) {return v / 256;})
-      var normalizedTimeDomain = _.map(timeDomain, function(v) {return v / 256;})
+      var normalizedFreqDomain = _.map(freqDomain, function(v) {return v / 256;});
+      var normalizedTimeDomain = _.map(timeDomain, function(v) {return (v-128)/128;});
+      // console.log("time", normalizedTimeDomain);
+      // console.log("freq", normalizedFreqDomain);
       if (concatNb < ACQUISITION) {
         for (var i = 0; i < normalizedTimeDomain.length; i++) {
           timeArray.push(normalizedTimeDomain[i]);
@@ -38,14 +42,22 @@ var ee = BackboneEvents.mixin({
           }
           averageFreq[i] = sum / freqArray.length; 
         }
-        var volume = getPower(timeArray) / (analyser.frequencyBinCount*ACQUISITION);
+        var volume = getPower(timeArray);
         var energyBalance = getEnergyBalance(averageFreq);
         var numberExtremeFreq = getNumberExtremeFrequency(averageFreq);
         var info = {"volume": volume, "energyBalance": energyBalance, 
                 "numberExtremeFreq": numberExtremeFreq};
-        console.log(info);
+        // console.log(info);
         var isAd = decisionTree(info);
-        self.trigger("isAd", isAd);
+        if (isAd) {
+          if (positive > NUMBER_POSITIVE_FLAG) {
+            self.trigger("isAd", true);
+          } else {
+            positive++;
+          }
+        } else {
+          positive = 0;
+        }
         concatNb = 0;
         timeArray = [];
         freqArray = [];
@@ -56,7 +68,7 @@ var ee = BackboneEvents.mixin({
 
 //isAd
 function decisionTree(info) {
-  if (info.volume > 0.65) {
+  if (info.volume > 20) {
     return false;
   } else {
     if (info.energyBalance > 0.42) return true
@@ -64,15 +76,13 @@ function decisionTree(info) {
   }
 }
 
-function linear()
-
 // array: audio sample
 function getPower(array) {
   var length = array.length;
   var v = 0;
   for(var i = 0; i < length; i++) {
     var d = array[i];
-    v += d;
+    v += d * d;
   }
   console.log("volume", v);
   return v;
