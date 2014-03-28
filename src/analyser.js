@@ -17,7 +17,7 @@ var ee = BackboneEvents.mixin({
 
     var ACQUISITION = 100;
     var NUMBER_POSITIVE_FLAG = 2;
-    var NUMBER_NEGATIVE_FLAG = 2;
+    var NUMBER_NEGATIVE_FLAG = 3;
 
     var isNowAd = false;
 
