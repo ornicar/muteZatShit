@@ -143,4 +143,19 @@ function getNumberExtremeFrequency(array) {
   return extreme;
 }
 
+// array of sample of freq
+function spectralFlux(samples) {
+  // sum of the dist for a freq between samples:
+  var sampleLenght = samples.length;
+  var sample = samples[0];
+  var length = sample.length;
+  var f = 0;
+  for (var i = 0; i < length; i++) {
+    for (var j = 1; j < sampleLength; j++) {
+      f += Math.abs(samples[j-1][i] - samples[j][i]);
+    }
+  }
+  return f;
+}
+
 module.exports = ee;
