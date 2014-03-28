@@ -384,7 +384,7 @@ VolumeView = Backbone.View.extend({
     this.ctx = this.canvas.getContext("2d");
     //this.generateGradientCanvas();
 
-    this.$wfcontrols = $('<div class="first-control controls-wave"/>').appendTo(this.$el);
+    this.$wfcontrols = $('<div class="controls-wave"/>').appendTo(this.$el);
 
     this.syncSize();
     //this.listenTo(this.model, "change:gradientColors", this.generateGradientCanvas);
