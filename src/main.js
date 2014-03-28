@@ -68,10 +68,6 @@ analyser.start();
 var nyquist = ctx.sampleRate / 2;
 console.log("freq max", nyquist / 1000 + " kHz");
 
-analyser.on("isAd", function() {
-  console.log("AD !!!");
-});
-
 audio.autoplay = true;
 audio.id = "audio-player";
 
@@ -161,14 +157,24 @@ function displayItem() {
   document.getElementById('playlist-items').innerHTML = readUrls();
 } displayItem();
 
-console.log("fading");
-var now = ctx.currentTime;
-out.gain.cancelScheduledValues( now );
-out.gain.setValueAtTime(1.0, now);
-//out.gain.exponentialRampToValueAtTime(1, ctx.currentTime);
-//out.gain.linearRampToValueAtTime(0.0, now + 18.0);
-//out.gain.exponentialRampToValueAtTime(1.0, now + 4);
-  //out.gain.linearRampToValueAtTime(0, ctx.currentTime + ctx.FADE_TIME);
+
+analyser.on("beginAd", function() {
+  console.log("fading");
+  var now = ctx.currentTime;
+  out.gain.cancelScheduledValues( now );
+  out.gain.setValueAtTime(1.0, now);
+  out.gain.linearRampToValueAtTime(0.0, now + 1.0);
+});
+
+analyser.on("endAd", function() {
+  console.log("fading up");
+  var now = ctx.currentTime;
+  out.gain.linearRampToValueAtTime(1.0, now + 1.0);
+});
+
+// out.gain.exponentialRampToValueAtTime(1, ctx.currentTime);
+// out.gain.exponentialRampToValueAtTime(1.0, now + 4);
+//   out.gain.linearRampToValueAtTime(0, ctx.currentTime + ctx.FADE_TIME);
 
 (function loop () {
   //if (end.isFulfilled()) return;

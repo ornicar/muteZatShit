@@ -19,6 +19,8 @@ var ee = BackboneEvents.mixin({
     var NUMBER_POSITIVE_FLAG = 2;
     var NUMBER_NEGATIVE_FLAG = 2;
 
+    var isNowAd = false;
+
     setInterval(function() {
       var freqDomain = new Uint8Array(analyser.frequencyBinCount);
       var timeDomain = new Uint8Array(analyser.frequencyBinCount);
@@ -58,12 +60,16 @@ var ee = BackboneEvents.mixin({
           positive++;
           if (positive >= NUMBER_POSITIVE_FLAG) {
             negative = NUMBER_NEGATIVE_FLAG;
-            self.trigger("isAd");
+            if (!isNowAd) {
+              self.trigger("beginAd");
+            }
+            isNowAd = true;
           } 
         } else {
           negative--;
-          if (negative >= 1) {
-            self.trigger("isAd");
+          if (negative == 0) {
+            self.trigger("endAd");
+            isNowAd = false;
           } else {
             positive = 0;
           }
