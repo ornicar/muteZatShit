@@ -101,6 +101,13 @@
           background-size: @size;
 }
 
+// Filter
+.filter(@blur, @saturate) {
+  -webkit-filter: blur(@blur) saturate(@saturate);
+     -moz-filter: blur(@blur) saturate(@saturate);
+          filter: blur(@blur) saturate(@saturate);
+}
+
 // Box sizing
 .box-sizing(@boxmodel) {
   -webkit-box-sizing: @boxmodel;
