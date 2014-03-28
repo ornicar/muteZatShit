@@ -395,9 +395,9 @@ VolumeView = Backbone.View.extend({
     this.canvas = document.createElement("canvas");
     this.$el.append(this.canvas);
     this.ctx = this.canvas.getContext("2d");
-    this.generateGradientCanvas();
+    //this.generateGradientCanvas();
     this.syncSize();
-    this.listenTo(this.model, "change:gradientColors", this.generateGradientCanvas);
+    //this.listenTo(this.model, "change:gradientColors", this.generateGradientCanvas);
     this.listenTo(this.model, "change:width change:height", this.syncSize);
     this.listenTo(this.model, "update", this.render);
   },
@@ -413,7 +413,7 @@ VolumeView = Backbone.View.extend({
     canvas.width = this.gran;
     canvas.height = 1;
     var ctx = canvas.getContext("2d");
-    var gradientColors = this.model.get("gradientColors");
+    /*var gradientColors = this.model.get("gradientColors");
     var gradient = ctx.createLinearGradient(0,0,this.gran,0);
     var last = gradientColors.length - 1;
     for (var i=last; i>=0; i--) {
@@ -422,17 +422,17 @@ VolumeView = Backbone.View.extend({
     //ctx.fillStyle = gradient;
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, this.gran, 1);
-    var imgd = ctx.getImageData(0, 0, this.gran, 1);
+    var imgd = ctx.getImageData(0, 0, this.gran, 1);*/
     document.body.appendChild(canvas);
-    this.gradientData = imgd.data;
+    // this.gradientData = imgd.data;
   },
-  getGradientValue: function (percent) {
+  /*getGradientValue: function (percent) {
     var i = Math.floor(this.gran*percent);
     var r = this.gradientData[i*4];
     var g = this.gradientData[i*4+1];
     var b = this.gradientData[i*4+2];
     return "rgb("+r+","+g+","+b+")";
-  },
+  },*/
   render: function () {
     var ctx = this.ctx;
     var arrayVol = this.model.array;
@@ -441,23 +441,24 @@ VolumeView = Backbone.View.extend({
     var W = ctx.canvas.width;
     var H = ctx.canvas.height;
 
-    // Spectrum Analyzer
     ctx.drawImage(ctx.canvas, -1, 0);
     //var freqh = H / lengthVol; // We can afford to lose some high freq viz...
     var vol = 0;
-    var max = 128 * 128;
-    var freqh = H / lengthVol; 
+    var max = -128;
     for (var i=0; i<lengthVol; ++i) {
       var value = arrayVol[i] - 128;
       vol += value*value;
+      if(value > max) max = value;
       //ctx.fillStyle = this.getGradientValue(value/256);
       //ctx.fillRect(W-1,H-y,1,freqh);
     }
     //var p = (vol / max) * H;
-    var p = H* vol / max;
+    var p = H * vol / (max*max*lengthVol);
     console.log(Math.floor(p));
+    ctx.fillStyle = "#000"; //this.getGradientValue(p);
+    ctx.fillRect(W-1, 0, 1, H);
     ctx.fillStyle = "#fff"; //this.getGradientValue(p);
-    ctx.fillRect(W-1, 0, 1, Math.floor(p));
+    ctx.fillRect(W-1, 0, 1, p);
   }
 });
 

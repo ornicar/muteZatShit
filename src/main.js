@@ -19,7 +19,7 @@ var waveformView = new WaveformView({
 waveformView.$el.appendTo(container);
 
 waveform.setNode(out, ctx);
-
+/*
 var spectrum = new Spectrum({
   width: 960,
   height: 200
@@ -29,7 +29,7 @@ var spectrumView = new SpectrumView({
 });
 spectrumView.$el.appendTo(container);
 spectrum.setNode(out, ctx);
-/*
+*/
 // VOLUME
 var volume = new Volume({
   width: 960,
@@ -41,7 +41,7 @@ var volumeView = new VolumeView({
 volumeView.$el.appendTo(container);
 volume.setNode(out, ctx);
 
-*/
+
 // SPECTOGRAM
 var spectrogram = new Spectrogram({
   width: 960,
@@ -68,7 +68,7 @@ analyser.start();
 var nyquist = ctx.sampleRate / 2;
 console.log("freq max", nyquist / 1000 + " kHz");
 
-analyser.on("isAd", function(isAd) {
+analyser.on("isAd", function() {
   console.log("AD !!!");
 });
 
@@ -76,7 +76,8 @@ audio.autoplay = true;
 audio.id = "audio-player";
 
 // audio.src = "http://listen.radionomy.com/fuzzy-and-groovy";
-audio.src = "http://sacem.iliaz.com/radionova.ogg";
+// audio.src = "http://sacem.iliaz.com/radionova.ogg";
+audio.src = "http://sacem.iliaz.com/spotify.ogg";
 
 document.getElementById('player').appendChild(audio);
 
@@ -98,7 +99,7 @@ $('#btn-play').on('click', function() {
 });
 
 document.getElementById('volume').addEventListener('change', function () {
-  // gainNode.gain.value = this.value;
+  audio.volume = this.value;
 });
 
 player.addEventListener('timeupdate', function() {
@@ -173,8 +174,8 @@ out.gain.setValueAtTime(1.0, now);
   //if (end.isFulfilled()) return;
   requestAnimationFrame(loop);
   waveform.update();
-  spectrum.update();
-  //volume.update();
+  //spectrum.update();
+  volume.update();
   spectrogram.update();
 } ());
 
