@@ -2,6 +2,7 @@
   :description "Mute Zat Shit - the web radio ad blocker"
   :url "mzs.iliaz.com"
   :dependencies [[org.clojure/clojure "1.5.1"]
+                 [clj-http "0.9.1"]
                  [lib-noir "0.8.1"]
                  [compojure "1.1.6"]
                  [ring-server "0.3.1"]
