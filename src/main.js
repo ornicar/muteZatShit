@@ -1,6 +1,6 @@
 var $ = require("jquery");
 
-var analyser = require("./analyser")
+var analyser = require("./analyser");
 
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
 var audio = new Audio();
@@ -72,12 +72,25 @@ analyser.on("isAd", function() {
   console.log("AD !!!");
 });
 
+function readUrls() {
+  return JSON.parse(localStorage.getItem('urls')) || [];
+}
+
+if (readUrls().length === 0) {
+  localStorage['urls'] = JSON.stringify([
+    "http://listen.radionomy.com/fuzzy-and-groovy",
+    "http://sacem.iliaz.com/radionova.ogg",
+    "http://listen.radionomy.com/radio-mozart",
+    "http://stream3.jungletrain.net:8000/"
+  ]);
+}
+
 audio.autoplay = true;
 audio.id = "audio-player";
 
 // audio.src = "http://listen.radionomy.com/fuzzy-and-groovy";
 // audio.src = "http://sacem.iliaz.com/radionova.ogg";
-audio.src = "http://sacem.iliaz.com/spotify.ogg";
+audio.src = readUrls()[0];
 
 document.getElementById('player').appendChild(audio);
 
@@ -128,7 +141,7 @@ function safe_tags_replace(str) {
 
 document.getElementById('form-playlist').addEventListener('submit', function (evt) {
   var urlValue = document.getElementById('input-url').value;
-  var urls = JSON.parse(localStorage.getItem('urls')) || [];
+  var urls = readUrls();
   var safeUrl = safe_tags_replace(urlValue);
 
   // Push to array
@@ -148,8 +161,8 @@ document.getElementById('form-playlist').addEventListener('submit', function (ev
 });
 
 // Read urls of localstorage
-function readUrls() {
-  var urls = JSON.parse(localStorage.getItem('urls')) || [];
+function renderUrls() {
+  var urls = readUrls();
 
   return urls.map(function(url) {
     return '<li>' + url + '</li>';
@@ -158,7 +171,7 @@ function readUrls() {
 
 // Display items
 function displayItem() {
-  document.getElementById('playlist-items').innerHTML = readUrls();
+  document.getElementById('playlist-items').innerHTML = renderUrls();
 } displayItem();
 
 console.log("fading");
