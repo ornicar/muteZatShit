@@ -16,7 +16,7 @@ var ee = BackboneEvents.mixin({
     var freqArray = [];
 
     var ACQUISITION = 100;
-    var NUMBER_POSITIVE_FLAG = 2;
+    var NUMBER_POSITIVE_FLAG = 1;
     var NUMBER_NEGATIVE_FLAG = 3;
 
     var isNowAd = false;
@@ -59,6 +59,7 @@ var ee = BackboneEvents.mixin({
         if (isAd) {
           positive++;
           if (positive >= NUMBER_POSITIVE_FLAG) {
+            console.log(positive);
             negative = NUMBER_NEGATIVE_FLAG;
             if (!isNowAd) {
               self.trigger("beginAd");
