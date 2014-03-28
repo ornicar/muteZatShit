@@ -15,7 +15,7 @@ analyser.setAnalyserNode(analyserNode);
 analyser.start();
 
 analyser.on("probability", function(freqs) {
-  console.log(freqs[0]);
+  console.log(freqs);
 });
 
 
