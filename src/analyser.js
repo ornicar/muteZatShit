@@ -171,4 +171,17 @@ function spectralFlux(samples) {
   return f;
 }
 
+function meanFrequency(frequencies) {
+  var m = 0;
+  var weight = 0;
+  var length = frequencies.length;
+  for (var i = 0; i < length; i++) {
+    var p = frequencies[i];
+    var freq = i * 22050 / length;
+    m += freq * p;
+    weight += p;
+  }
+  return m / weight;
+}
+
 module.exports = ee;

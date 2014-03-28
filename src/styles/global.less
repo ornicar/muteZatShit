@@ -4,7 +4,178 @@ body {
   font-family: @font-base;
   font-size: @font-size-base;
   line-height: @line-height-base;
+  overflow: hidden;
   .font-smoothing(antialiased);
   .text-rendering(optimizelegibility);
 }
 
+.main {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+
+  .cover-image {
+    background: url(../src/images/cover-kodaline.jpg) no-repeat;
+    position: absolute;
+    top: -100px;
+    left: -100px;
+    right: -100px;
+    bottom: -100px;
+    .filter(35px, 80%);
+    .background-size(cover);
+  }
+
+  .box {
+    position: relative;
+    background: @white;
+    width: @box-width;
+    height: @box-height;
+    margin-left: auto;
+    margin-right: auto;
+    .box-shadow(0 1px 10px rgba(0, 0, 0, .2));
+    .border-radius(4px);
+
+    form {
+      position: relative;
+      color: @blue-dark;
+
+      input {
+        background: transparent;
+        font-family: @font-base;
+        font-size: 1.125rem;
+        font-weight: 300;
+        margin: 0;
+        border: 0;
+        width: 100%;
+        padding: 15px;
+        border-bottom: 1px solid @blue-light;
+        .box-sizing(border-box);
+      }
+
+      .plus-icon {
+        pointer-events: none;
+        position: absolute;
+        font-size: 1.75rem;
+        font-weight: 300;
+        color: @blue;
+        top: 15px;
+        right: 14px;
+      }
+    }
+
+    .playlist {
+      color: @blue-dark;
+      height: 312px;
+
+      // What a bug
+      // overflow-y: scroll;
+
+      li {
+        border-bottom: 1px solid @blue-light;
+        padding: 14px 0 14px 14px;
+        cursor: pointer;
+        .transition(all .2s ease);
+
+        &:hover { background: @blue-light; }
+      }
+    }
+
+    #player {
+      position: absolute;
+      background: #F5F8FA;
+      width: 100%;
+      bottom: 0;
+      padding: 10px;
+      .border-radius(0 0 4px 4px);
+      .box-sizing(border-box);
+
+      .buttons-group { text-align: center; }
+
+      .big-btn {
+        height: 35px;
+        width: 35px;
+        background: transparent;
+        border: 1px solid @blue;
+        cursor: pointer;
+        margin-top: 10px;
+        margin-right: 5px;
+        .transition(all .2s ease);
+        .border-radius(100%);
+
+        &:hover {
+          background: @blue;
+          span { color: @white; }
+        }
+
+        span {
+          color: @blue;
+          font-size: 1rem;
+          .transition(all .2s ease);
+
+          &.icon-play { margin-left: 5px; }
+        }
+
+        &#btn-play {
+          height: 45px;
+          width: 45px;
+        }
+      }
+
+      .text {
+        margin-top: 20px;
+        text-align: center;
+        color: @blue-dark;
+
+        div {
+          display: inline-block;
+        }
+      }
+
+      #volume {
+        width: 200px;
+        margin: 20px auto 10px;
+        display: block;
+      }
+
+      input[type='range'] {
+        border: 1px solid @blue-light;
+        background-color: @white;
+        height: 8px;
+        vertical-align: middle; 
+        .appearance(none);
+        .border-radius(12px);
+      }
+
+      input[type='range']::-moz-range-track {
+        background-color: #999;
+        height: 10px;
+        .appearance(none);
+        .border-radius(12px);
+      }
+
+      input[type='range']::-webkit-slider-thumb {
+        background-color: @blue;
+        height: 14px;
+        width: 14px;
+        cursor: pointer;
+        .appearance(none);
+        .border-radius(14px);
+
+        &:hover { background-color: darken(@blue, 10%); }
+      }
+
+      input[type='range']::-moz-range-thumb {
+        background-color: @blue;
+        height: 14px;
+        width: 14px;
+        cursor: pointer;
+        .appearance(none);
+        .border-radius(14px);
+
+        &:hover { background-color: darken(@blue, 10%); }
+      }
+    }
+  }
+}
