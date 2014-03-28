@@ -14,8 +14,11 @@ out.connect(ctx.destination);
 analyser.setAnalyserNode(analyserNode);
 analyser.start();
 
+var nyquist = ctx.sampleRate / 2;
+console.log("freq max", nyquist / 1000 + " kHz");
+
 analyser.on("probability", function(freqs) {
-  console.log(freqs);
+  //console.log(freqs);
 });
 
 
