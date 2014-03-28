@@ -8,8 +8,8 @@ var out = ctx.createGain();
 
 var container = $("#container");
 
-var vizWhith = 500;
-var vizHeigth = 150;
+var vizWhith = 600;
+var vizHeigth = 158;
 var waveform = new Waveform({
   width: vizWhith,
   height: vizHeigth
@@ -22,7 +22,7 @@ var waveformView = new WaveformView({
 waveformView.$el.appendTo(container);
 
 waveform.setNode(out, ctx);
-/*
+
 var spectrum = new Spectrum({
   width: vizWhith,
   height: vizHeigth
@@ -32,7 +32,7 @@ var spectrumView = new SpectrumView({
 });
 spectrumView.$el.appendTo(container);
 spectrum.setNode(out, ctx);
-*/
+
 // VOLUME
 var volume = new Volume({
   width: vizWhith,
@@ -45,7 +45,7 @@ var volumeView = new VolumeView({
 volumeView.$el.appendTo(container);
 volume.setNode(out, ctx);
 
-
+/*
 // SPECTOGRAM
 var spectrogram = new Spectrogram({
   width: vizWhith,
@@ -56,7 +56,7 @@ var spectrogramView = new SpectrogramView({
 });
 spectrogramView.$el.appendTo(container);
 spectrogram.setNode(out, ctx);
-
+*/
 var source = ctx.createMediaElementSource(audio);
 
 var analyserNode = ctx.createAnalyser();
@@ -225,9 +225,9 @@ function showTitle() {
   //if (end.isFulfilled()) return;
   requestAnimationFrame(loop);
   waveform.update();
-  //spectrum.update();
+  spectrum.update();
   volume.update();
-  spectrogram.update();
+  // spectrogram.update();
 } ());
 
 $(function() {
