@@ -4,7 +4,14 @@ var analyser = require("./analyser");
 
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
 var audio = new Audio();
+var audio2 = new Audio();
+audio2.src = "http://listen.radionomy.com/fuzzy-and-groovy";
+audio2.autoplay = true;
+
 var out = ctx.createGain();
+out.gain.setValueAtTime(1, ctx.currentTime);
+var out2 = ctx.createGain();
+out2.gain.setValueAtTime(0, ctx.currentTime);
 
 var container = $("#container");
 
@@ -58,13 +65,16 @@ spectrogramView.$el.appendTo(container);
 spectrogram.setNode(out, ctx);
 
 var source = ctx.createMediaElementSource(audio);
+var source2 = ctx.createMediaElementSource(audio2);
 
 var analyserNode = ctx.createAnalyser();
 
 source.connect(analyserNode);
+source2.connect(out2);
 analyserNode.connect(out);
 
 out.connect(ctx.destination);
+out2.connect(ctx.destination);
 
 analyser.setAnalyserNode(analyserNode);
 analyser.start();
@@ -89,6 +99,7 @@ function readUrls() {
 if (readUrls().length === 0) {
   localStorage['urls'] = JSON.stringify([
     "http://listen.radionomy.com/fuzzy-and-groovy",
+    "http://sacem.iliaz.com/spotify.ogg",
     "http://sacem.iliaz.com/radionova.ogg",
     "http://listen.radionomy.com/radio-mozart",
     "http://stream3.jungletrain.net:8000/"
@@ -191,11 +202,14 @@ analyser.on("beginAd", function() {
   out.gain.cancelScheduledValues( now );
   out.gain.setValueAtTime(1.0, now);
   out.gain.linearRampToValueAtTime(0.0, now + 1.0);
+  out2.gain.setValueAtTime(0.0, now);
+  out2.gain.linearRampToValueAtTime(1.0, now + 1.0);
 });
 
 analyser.on("endAd", function() {
   console.log("fading up");
   var now = ctx.currentTime;
+  out2.gain.linearRampToValueAtTime(0.0, now + 1.0);
   out.gain.linearRampToValueAtTime(1.0, now + 1.0);
 });
 
