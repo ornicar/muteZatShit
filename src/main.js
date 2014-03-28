@@ -7,9 +7,12 @@ var audio = new Audio();
 var out = ctx.createGain();
 
 var container = $("#container");
+
+var vizWhith = 500;
+var vizHeigth = 150;
 var waveform = new Waveform({
-  width: 960,
-  height: 200
+  width: vizWhith,
+  height: vizHeigth
 });
 
 var waveformView = new WaveformView({
@@ -21,8 +24,8 @@ waveformView.$el.appendTo(container);
 waveform.setNode(out, ctx);
 /*
 var spectrum = new Spectrum({
-  width: 960,
-  height: 200
+  width: vizWhith,
+  height: vizHeigth
 });
 var spectrumView = new SpectrumView({
   model: spectrum
@@ -32,8 +35,9 @@ spectrum.setNode(out, ctx);
 */
 // VOLUME
 var volume = new Volume({
-  width: 960,
-  height: 200
+  width: vizWhith,
+  height: vizHeigth,
+  bg: "transparent"
 });
 var volumeView = new VolumeView({
   model: volume
@@ -44,11 +48,11 @@ volume.setNode(out, ctx);
 
 // SPECTOGRAM
 var spectrogram = new Spectrogram({
-  width: 960,
-  height: 200
+  width: vizWhith,
+  height: vizHeigth
 });
 var spectrogramView = new SpectrogramView({
-  model: spectrogram
+  model: spectrogram,
 });
 spectrogramView.$el.appendTo(container);
 spectrogram.setNode(out, ctx);
@@ -69,7 +73,13 @@ var nyquist = ctx.sampleRate / 2;
 console.log("freq max", nyquist / 1000 + " kHz");
 
 analyser.on("isAd", function() {
+var timeout;
   console.log("AD !!!");
+  $("#idAd").show();
+  clearTimeout(timeout);
+  timeout = setTimeout(function() {
+    $("#idAd").fadeOut();
+  });
 });
 
 function readUrls() {
