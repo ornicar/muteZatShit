@@ -106,4 +106,3 @@ function readUrls() {
 function displayItem() {
   document.getElementById('playlist-items').innerHTML = readUrls();
 } displayItem();
->>>>>>> Player design, basic controls
