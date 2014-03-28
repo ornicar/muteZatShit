@@ -72,14 +72,14 @@ analyser.start();
 var nyquist = ctx.sampleRate / 2;
 console.log("freq max", nyquist / 1000 + " kHz");
 
-analyser.on("isAd", function() {
 var timeout;
+analyser.on("isAd", function(isAd) {
   console.log("AD !!!");
-  $("#idAd").show();
+  $("#isAd").show();
   clearTimeout(timeout);
   timeout = setTimeout(function() {
-    $("#idAd").fadeOut();
-  });
+    $("#isAd").fadeOut();
+  }, 2000);
 });
 
 audio.autoplay = true;

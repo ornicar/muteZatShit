@@ -457,7 +457,6 @@ VolumeView = Backbone.View.extend({
     }
     //var p = (vol / max) * H;
     var p = H * vol / (max*max*lengthVol);
-    console.log(Math.floor(p));
     ctx.fillStyle = "#000"; //this.getGradientValue(p);
     ctx.fillRect(W-1, 0, 1, H);
     ctx.fillStyle = "#fff"; //this.getGradientValue(p);
