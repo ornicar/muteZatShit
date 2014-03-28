@@ -15,7 +15,7 @@ var ee = BackboneEvents.mixin({
     var timeArray = [];
     var freqArray = [];
 
-    var ACQUISITION = 50;
+    var ACQUISITION = 100;
     var NUMBER_POSITIVE_FLAG = 2;
     var NUMBER_NEGATIVE_FLAG = 2;
 
@@ -48,21 +48,22 @@ var ee = BackboneEvents.mixin({
         var energyBalance = getEnergyBalance(averageFreq);
         var numberExtremeFreq = getNumberExtremeFrequency(averageFreq);
         var voicePower = getVoicePower(averageFreq);
+        var spectral = spectralFlux(freqArray);
 
         var info = {"volume": volume, "energyBalance": energyBalance, 
-                "numberExtremeFreq": numberExtremeFreq, "voicePower": voicePower};
+                "numberExtremeFreq": numberExtremeFreq, "voicePower": voicePower, "spectral":spectral};
         console.log(info);
         var isAd = decisionTree(info);
         if (isAd) {
           positive++;
           if (positive >= NUMBER_POSITIVE_FLAG) {
             negative = NUMBER_NEGATIVE_FLAG;
-            self.trigger("isAd", "");
+            self.trigger("isAd");
           } 
         } else {
           negative--;
           if (negative >= 1) {
-            self.trigger("isAd", "");
+            self.trigger("isAd");
           } else {
             positive = 0;
           }
@@ -71,13 +72,13 @@ var ee = BackboneEvents.mixin({
         timeArray = [];
         freqArray = [];
       }
-    }, 50);
+    }, 20);
   }
 });
 
 //isAd
 function decisionTree(info) {
-  if (info.volume > 26) {
+  if (info.volume > 51) {
     return false;
   } else {
     if (info.voicePower < 75) {
@@ -163,7 +164,7 @@ function spectralFlux(samples) {
   var length = sample.length;
   var f = 0;
   for (var i = 0; i < length; i++) {
-    for (var j = 1; j < sampleLength; j++) {
+    for (var j = 1; j < sampleLenght; j++) {
       f += Math.abs(samples[j-1][i] - samples[j][i]);
     }
   }
