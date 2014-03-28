@@ -19,7 +19,7 @@ var waveformView = new WaveformView({
 waveformView.$el.appendTo(container);
 
 waveform.setNode(out, ctx);
-
+/*
 var spectrum = new Spectrum({
   width: 960,
   height: 200
@@ -29,7 +29,7 @@ var spectrumView = new SpectrumView({
 });
 spectrumView.$el.appendTo(container);
 spectrum.setNode(out, ctx);
-/*
+*/
 // VOLUME
 var volume = new Volume({
   width: 960,
@@ -41,7 +41,7 @@ var volumeView = new VolumeView({
 volumeView.$el.appendTo(container);
 volume.setNode(out, ctx);
 
-*/
+
 // SPECTOGRAM
 var spectrogram = new Spectrogram({
   width: 960,
@@ -173,7 +173,7 @@ out.gain.setValueAtTime(1.0, now);
   //if (end.isFulfilled()) return;
   requestAnimationFrame(loop);
   waveform.update();
-  spectrum.update();
-  //volume.update();
+  //spectrum.update();
+  volume.update();
   spectrogram.update();
 } ());
