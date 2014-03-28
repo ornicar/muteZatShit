@@ -9,6 +9,7 @@
     "underscore": "1.6.0",
     "browserify": "~3.33.1",
     "grunt-browserify": "~2.0.1",
-    "grunt-contrib-watch": "~0.6.1"
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-contrib-connect": "^0.7.1"
   }
 }

@@ -10,7 +10,13 @@ module.exports = function(grunt) {
     watch: {
       all: {
         files: ['src/*.js'],
-        tasks: ['default']
+        tasks: ['browserify']
+      },
+      options : {
+        livereload: true
+      },
+      html : {
+        files: ["index.html"]
       }
     },
     browserify: {
@@ -19,13 +25,20 @@ module.exports = function(grunt) {
           'bundle.js': ['src/*.js'],
         },
       }
+    },
+    connect: {
+      server: {
+        options: {
+          port: 9000,
+        }
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
-  grunt.registerTask('default', ["browserify"]);
+  grunt.registerTask('default', ["browserify", "connect", "watch"]);
 
 };
