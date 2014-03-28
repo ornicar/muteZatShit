@@ -84,14 +84,17 @@ var player = document.getElementById('audio-player');
 var btnPlay = document.getElementById('btn-play');
 var btnPause = document.getElementById('btn-pause');
 
-// Play button
-btnPlay.addEventListener('click', function() {
-  player.play();
-});
+// Play/pause button
+$('#btn-play').on('click', function() {
 
-// Pause button
-btnPause.addEventListener('click', function() {
-  player.pause();
+  if ( $('#icon').attr('class') == 'icon-play' ) {
+    player.play();
+    $('#icon').attr('class', 'icon-pause');
+  }
+  else if ($('#icon').attr('class') == 'icon-pause' ) {
+    player.pause();
+    $('#icon').attr('class', 'icon-play');
+  }
 });
 
 document.getElementById('volume').addEventListener('change', function () {
