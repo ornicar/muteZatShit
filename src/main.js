@@ -5,8 +5,7 @@ var analyser = require("./analyser");
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
 var audio = new Audio();
 var audio2 = new Audio();
-audio2.src = "http://listen.radionomy.com/fuzzy-and-groovy";
-audio2.autoplay = true;
+audio2.src = "http://sacem.iliaz.com/mzs.ogg";
 
 var out = ctx.createGain();
 out.gain.setValueAtTime(1, ctx.currentTime);
@@ -202,6 +201,7 @@ analyser.on("beginAd", function() {
   out.gain.setValueAtTime(1.0, now);
   out.gain.linearRampToValueAtTime(0.0, now + 1.0);
   out2.gain.setValueAtTime(0.0, now);
+  audio2.play();
   out2.gain.linearRampToValueAtTime(1.0, now + 1.0);
 });
 
