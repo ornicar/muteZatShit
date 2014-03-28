@@ -9,6 +9,24 @@ body {
   .text-rendering(optimizelegibility);
 }
 
+@-webkit-keyframes bounce {
+  0% { -webkit-transform: scale(0.8); }
+  50% { -webkit-transform: scale(1.2); }
+  100% { -webkit-transform: scale(0.8); }
+}
+
+@-moz-keyframes bounce {
+  0% { -moz-transform: scale(0.8); }
+  50% { -moz-transform: scale(1.2); }
+  100% { -moz-transform: scale(0.8); }
+}
+
+@keyframes bounce {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(0.8); }
+}
+
 #isAd {
   display: block;
   position: fixed;
@@ -16,7 +34,6 @@ body {
   font-size: 2rem;
   text-transform: uppercase;
   font-weight: 400;
-  background: red;
   color: @white;
   background: fade(@blue-dark, 95%);
   z-index: 100;
@@ -26,6 +43,7 @@ body {
   top: 30px;
   left: 50%;
   margin-left: -120px;
+  .animation(bounce .3s infinite);
   .box-shadow(0 1px 10px rgba(0, 0, 0, .2));  
   .border-radius(4px);
 }
