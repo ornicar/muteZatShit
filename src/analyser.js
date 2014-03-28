@@ -67,4 +67,25 @@ function getEnergyBalance(array) {
   return notVoice/voice;
 }
 
+// array frequency
+function getNumberExtremeFrequency(array) {
+  var average = 0;
+  var length = array.length;
+  for(var i =0; i < length; i++) {
+    average += array[i];
+  }
+  average = average / length;
+
+  var extreme = 0;
+  var min = average * 0.2;
+  var max = average * 3;
+  for(var i = 0; i< length; i++) {
+    var freq = array[i];
+    if (freq < min || freq > max ) {
+      extreme ++;
+    }
+  }
+  return extreme;
+}
+
 module.exports = ee;
