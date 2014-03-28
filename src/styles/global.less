@@ -32,13 +32,12 @@ body {
   width: 100%;
 
   .cover-image {
-    background: url(../src/images/cover-kodaline.jpg) no-repeat;
+    background: url(../src/images/cover.png) no-repeat;
     position: absolute;
     top: -100px;
     left: -100px;
     right: -100px;
     bottom: -100px;
-    .filter(35px, 80%);
     .background-size(cover);
   }
 
@@ -134,10 +133,8 @@ body {
 
     .playlist {
       color: @blue-dark;
-      height: 312px;
-
-      // What a bug
-      // overflow-y: scroll;
+      height: 245px;
+      overflow-y: scroll;
 
       li {
         border-bottom: 1px solid @blue-light;
