@@ -7,5 +7,5 @@ var source = ctx.createMediaElementSource(audio);
 source.connect(out);
 out.connect(ctx.destination);
 
-audio.src = "http://listen.radionomy.com/eda-music-radio";
+audio.src = "http://listen.radionomy.com/fuzzy-and-groovy";
 audio.play();
